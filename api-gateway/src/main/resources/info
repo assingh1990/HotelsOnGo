@@ -1,0 +1,11 @@
+React UI
+   ↓
+API Gateway
+   ↓
+Booking Service
+   ↓ Kafka
+Payment Service
+   ↓ Kafka
+Inventory Service
+   ↓ Kafka
+Notification Service
