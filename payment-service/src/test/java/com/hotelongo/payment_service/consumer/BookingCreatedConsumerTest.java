@@ -27,16 +27,17 @@ class BookingCreatedConsumerTest {
 	@Test
 	void consumeBookingCreatedDelegatesToPaymentService() throws Exception {
 		consumer.consumeBookingCreated("""
-				{
-				  "bookingId": 1,
-				  "customerName": "Ashok Singh",
-				  "hotelId": "hotel-1",
-				  "amount": 1250.00,
-				  "bookingStatus": "PENDING",
-				  "roomNumber": "101",
-				  "email": "ashok@example.com"
-				}
-				""");
+		        {
+		          "eventType": "BOOKING_CREATED",
+		          "bookingId": 1,
+		          "customerName": "Ashok Singh",
+		          "hotelId": "hotel-1",
+		          "amount": 1250.00,
+		          "bookingStatus": "PENDING",
+		          "roomNumber": "101",
+		          "email": "ashok@example.com"
+		        }
+		        """);
 
 		verify(paymentService).processPayment(argThat(event ->
 				event.getBookingId() == 1L
