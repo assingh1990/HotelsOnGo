@@ -2,15 +2,15 @@ package com.hotelongo.payment_service.event;
 
 public class PaymentSuccessEvent {
 
-	private String bookingId;
+	private Long bookingId;
 	private String paymentId;
 	private String status;
 
-	public String getBookingId() {
+	public Long getBookingId() {
 		return bookingId;
 	}
 
-	public void setBookingId(String bookingId) {
+	public void setBookingId(Long bookingId) {
 		this.bookingId = bookingId;
 	}
 

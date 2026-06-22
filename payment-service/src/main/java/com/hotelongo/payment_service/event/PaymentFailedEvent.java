@@ -2,14 +2,14 @@ package com.hotelongo.payment_service.event;
 
 public class PaymentFailedEvent {
 
-	private String bookingId;
+	private Long bookingId;
 	private String reason;
 
-	public String getBookingId() {
+	public Long getBookingId() {
 		return bookingId;
 	}
 
-	public void setBookingId(String bookingId) {
+	public void setBookingId(Long bookingId) {
 		this.bookingId = bookingId;
 	}
 

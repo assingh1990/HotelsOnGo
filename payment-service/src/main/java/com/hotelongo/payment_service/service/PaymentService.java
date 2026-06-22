@@ -26,13 +26,12 @@ public class PaymentService {
 
 	public void processPayment(BookingCreatedEvent event) {
 		if (!isPaymentValid(event)) {
-			publishPaymentFailure(String.valueOf(event.getBookingId()), "Invalid payment amount");
+			publishPaymentFailure(event.getBookingId(), "Invalid payment amount");
 			return;
 		}
 
-		
 		PaymentSuccessEvent successEvent = new PaymentSuccessEvent();
-		successEvent.setBookingId(String.valueOf(event.getBookingId()));
+		successEvent.setBookingId(event.getBookingId());
 		successEvent.setPaymentId(UUID.randomUUID().toString());
 		successEvent.setStatus("DONE");
 
@@ -47,7 +46,7 @@ public class PaymentService {
 		return event.getAmount() != null && event.getAmount().compareTo(BigDecimal.ZERO) > 0;
 	}
 
-	private void publishPaymentFailure(String bookingId, String reason) {
+	private void publishPaymentFailure(Long bookingId, String reason) {
 		PaymentFailedEvent failedEvent = new PaymentFailedEvent();
 		failedEvent.setBookingId(bookingId);
 		failedEvent.setReason(reason);
