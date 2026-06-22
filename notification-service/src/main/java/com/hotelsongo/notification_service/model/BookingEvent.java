@@ -11,7 +11,7 @@ public class BookingEvent {
 	private String eventId;
 	private String eventType;
     private LocalDateTime eventTime;
-	private String bookingId;
+	private Long bookingId;
 	private String customerName;
 	private String hotelId;
 	private BigDecimal amount;
@@ -45,11 +45,11 @@ public class BookingEvent {
 		this.eventTime = eventTime;
 	}
 
-	public String getBookingId() {
+	public Long getBookingId() {
 		return bookingId;
 	}
 
-	public void setBookingId(String bookingId) {
+	public void setBookingId(Long bookingId) {
 		this.bookingId = bookingId;
 	}
 

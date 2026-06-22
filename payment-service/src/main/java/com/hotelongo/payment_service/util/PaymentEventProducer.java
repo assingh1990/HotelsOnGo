@@ -25,10 +25,10 @@ public class PaymentEventProducer {
 	}
 
 	public void publishPaymentSuccess(PaymentSuccessEvent event) {
-		kafkaTemplate.send(paymentSuccessTopic, event.getBookingId(), event);
+		kafkaTemplate.send(paymentSuccessTopic, String.valueOf(event.getBookingId()), event);
 	}
 
 	public void publishPaymentFailure(PaymentFailedEvent event) {
-		kafkaTemplate.send(paymentFailedTopic, event.getBookingId(), event);
+		kafkaTemplate.send(paymentFailedTopic, String.valueOf(event.getBookingId()), event);
 	}
 }
