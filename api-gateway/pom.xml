@@ -42,6 +42,19 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
+		<!-- ✅ Micrometer Tracing Bridge (Spring Boot 3.x replacement for
+		Sleuth) -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-tracing-bridge-brave</artifactId>
+		</dependency>
+
+		<!-- ✅ Send traces to Zipkin -->
+		<dependency>
+			<groupId>io.zipkin.reporter2</groupId>
+			<artifactId>zipkin-reporter-brave</artifactId>
+		</dependency>
+
 		<!-- ✅ Security (Reactive compatible) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
