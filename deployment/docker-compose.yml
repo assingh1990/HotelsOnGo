@@ -18,6 +18,7 @@ services:
     networks:
       - hotels-network
 
+
   # ==========================
   # Kafka
   # ==========================
@@ -46,6 +47,7 @@ services:
     networks:
       - hotels-network
 
+
   # ==========================
   # Redis
   # ==========================
@@ -58,6 +60,20 @@ services:
     networks:
       - hotels-network
 
+
+  # ==========================
+  # Zipkin Distributed Tracing
+  # ==========================
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    restart: unless-stopped
+    ports:
+      - "9411:9411"
+    networks:
+      - hotels-network
+
+
   # ==========================
   # Discovery Server
   # ==========================
@@ -67,8 +83,11 @@ services:
     container_name: discovery-server
     ports:
       - "8761:8761"
+    depends_on:
+      - zipkin
     networks:
       - hotels-network
+
 
   # ==========================
   # Auth Service
@@ -82,13 +101,16 @@ services:
     depends_on:
       - postgres
       - discovery-server
+      - zipkin
     environment:
       EUREKA_SERVER_URL: http://discovery-server:8761/eureka
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
     networks:
       - hotels-network
 
+
   # ==========================
-  # Booking Service (FIXED POSITION)
+  # Booking Service
   # ==========================
   booking-service:
     build:
@@ -101,13 +123,18 @@ services:
       - kafka
       - redis
       - discovery-server
+      - zipkin
+
     environment:
       EUREKA_SERVER_URL: http://discovery-server:8761/eureka
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+
     networks:
       - hotels-network
+
 
   # ==========================
   # Payment Service
@@ -118,15 +145,21 @@ services:
     container_name: payment-service
     ports:
       - "8083:8083"
+
     depends_on:
       - postgres
       - kafka
       - discovery-server
+      - zipkin
+
     environment:
       EUREKA_SERVER_URL: http://discovery-server:8761/eureka
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+
     networks:
       - hotels-network
+
 
   # ==========================
   # Notification Service
@@ -137,13 +170,19 @@ services:
     container_name: notification-service
     ports:
       - "8084:8084"
+
     depends_on:
       - kafka
       - discovery-server
+      - zipkin
+
     environment:
       EUREKA_SERVER_URL: http://discovery-server:8761/eureka
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+
     networks:
       - hotels-network
+
 
   # ==========================
   # Email Service
@@ -154,13 +193,19 @@ services:
     container_name: email-service
     ports:
       - "8085:8085"
+
     depends_on:
       - kafka
       - discovery-server
+      - zipkin
+
     environment:
       EUREKA_SERVER_URL: http://discovery-server:8761/eureka
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+
     networks:
       - hotels-network
+
 
   # ==========================
   # API Gateway
@@ -171,17 +216,24 @@ services:
     container_name: api-gateway
     ports:
       - "9090:9090"
+
     depends_on:
       - discovery-server
       - auth-service
       - booking-service
+      - zipkin
+
     environment:
       EUREKA_SERVER_URL: http://discovery-server:8761/eureka
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+
     networks:
       - hotels-network
 
+
 volumes:
   postgres-data:
+
 
 networks:
   hotels-network:
